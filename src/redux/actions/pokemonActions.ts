@@ -11,9 +11,9 @@ export const fetchPokemons = () => async (dispatch: Dispatch) => {
   }
 };
 
-export const fetchPokemonDetails = (pokemonId: string) => async (dispatch: Dispatch) => {
+export const fetchPokemonDetails = (urlPokemon: string) => async (dispatch: Dispatch) => {
   try {
-    const response = await axios.get(pokemonId.url);
+    const response = await axios.get(urlPokemon);
     console.log(response.data)
     dispatch({ type: 'FETCH_POKEMON_DETAILS_SUCCESS', payload: response.data });
   } catch (error) {

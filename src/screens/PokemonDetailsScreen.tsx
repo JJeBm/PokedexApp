@@ -4,13 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchPokemonDetails } from '../redux/actions/pokemonActions';
 
 const PokemonDetailsScreen = ({ route }: any) => {
-  const { url } = route.params;
+  const { dataPokemon } = route.params;
   const dispatch = useDispatch();
   const pokemonDetails = useSelector((state: any) => state.pokemon.pokemonDetails);
 
   useEffect(() => {
-    dispatch(fetchPokemonDetails(url));
-  }, [dispatch, url]);
+    dispatch(fetchPokemonDetails(dataPokemon.url));
+  }, [dispatch, dataPokemon]);
 
   return (
     <View>
