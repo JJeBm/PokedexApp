@@ -5,7 +5,8 @@ import { PokemonTypeImage } from '../util/ui';
 const PokemonDetailsScreen = ({ route }: any) => {
   const { pokemon } = route.params;
   const { height } = useWindowDimensions();
-
+  const isSingleType = pokemon.types.length === 1;
+  console.log(pokemon)
   return (
     <View style={[styles.container, { height }]}>
       <Text style={styles.title}>{pokemon.name.toUpperCase()}</Text>
@@ -14,7 +15,7 @@ const PokemonDetailsScreen = ({ route }: any) => {
       <Image source={{ uri: pokemon.sprites.front_default }} style={styles.image} />
 
       {/* Tipos */}
-      <View style={styles.typesContainer}>
+      <View style={[styles.typesContainer, isSingleType && styles.singleTypeContainer]}>
         {pokemon.types.map((item: { type: { name: string } }) => (
           <PokemonTypeImage key={item.type.name} type={item.type.name} />
         ))}
@@ -49,7 +50,7 @@ const PokemonDetailsScreen = ({ route }: any) => {
       <View style={styles.movesContainer}>
         {pokemon.moves.slice(0, 5).map((move: { move: { name: string } }) => (
           <Text key={move.move.name} style={styles.text}>
-            {move.move.name}
+            {`${move.move.name}  `}
           </Text>
         ))}
       </View>
@@ -95,5 +96,8 @@ const styles = StyleSheet.create({
   movesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+  },
+  singleTypeContainer: {
+    justifyContent: 'center',  // Centra el icono si hay un solo tipo
   },
 });
