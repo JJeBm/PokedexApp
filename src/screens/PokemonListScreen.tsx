@@ -1,10 +1,13 @@
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPokemons } from '../redux/actions/pokemonActions';
 
 const PokemonListScreen = ({ navigation }: any) => {
-  const dispatch = useDispatch();
+  // Cambia el tipo de dispatch para que acepte Thunks
+  const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch();
   const pokemons = useSelector((state: any) => state.pokemon.pokemons);
   const [search, setSearch] = useState('');
 
@@ -12,7 +15,9 @@ const PokemonListScreen = ({ navigation }: any) => {
     dispatch(fetchPokemons());
   }, [dispatch]);
 
-  const filteredPokemons = pokemons.filter((pokemon: any) => pokemon.name.includes(search.toLowerCase()));
+  const filteredPokemons = pokemons.filter((pokemon: any) =>
+    pokemon.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <View>
@@ -21,7 +26,7 @@ const PokemonListScreen = ({ navigation }: any) => {
         data={filteredPokemons}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate('PokemonDetails', { url: item })}>
+          <TouchableOpacity onPress={() => navigation.navigate('PokemonDetails', { pokemon: item })}>
             <Text>{item.name}</Text>
           </TouchableOpacity>
         )}

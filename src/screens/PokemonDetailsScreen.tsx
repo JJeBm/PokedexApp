@@ -2,15 +2,18 @@ import React, { useEffect } from 'react';
 import { View, Text, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPokemonDetails } from '../redux/actions/pokemonActions';
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
 
 const PokemonDetailsScreen = ({ route }: any) => {
-  const { dataPokemon } = route.params;
-  const dispatch = useDispatch();
+  const { pokemon } = route.params;
+  const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch();
   const pokemonDetails = useSelector((state: any) => state.pokemon.pokemonDetails);
 
   useEffect(() => {
-    dispatch(fetchPokemonDetails(dataPokemon.url));
-  }, [dispatch, dataPokemon]);
+    console.log(pokemon)
+    dispatch(fetchPokemonDetails(pokemon.url));
+  }, [dispatch, pokemon]);
 
   return (
     <View>
