@@ -1,4 +1,3 @@
-// src/redux/actions/pokemonActions.ts
 import { Dispatch } from 'redux';
 import axios from 'axios';
 
