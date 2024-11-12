@@ -31,7 +31,7 @@ const PokemonListScreen = ({ navigation }: any) => {
   );
 
   return (
-    <View style={{ padding: 20, height: useWindowDimensions().height,  }}>
+    <View style={{ padding: 20, height: useWindowDimensions().height }}>
       <TextInput
         placeholder="Buscar Pokémon"
         value={search}
