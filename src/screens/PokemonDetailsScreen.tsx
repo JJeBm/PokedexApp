@@ -7,21 +7,21 @@ import { AnyAction } from 'redux';
 
 const PokemonDetailsScreen = ({ route }: any) => {
   const { pokemon } = route.params;
-  const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch();
-  const pokemonDetails = useSelector((state: any) => state.pokemon.pokemonDetails);
+  // const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch();
+  // const pokemonDetails = useSelector((state: any) => state.pokemon.pokemonDetails);
 
-  useEffect(() => {
-    dispatch(fetchPokemonDetails(pokemon.url));
-  }, [dispatch, pokemon]);
+  // useEffect(() => {
+  //   dispatch(fetchPokemonDetails(pokemon.url));
+  // }, [dispatch, pokemon]);
 
   return (
     <View>
-      {pokemonDetails ? (
+      {pokemon ? (
         <>
-          <Text>{pokemonDetails.name}</Text>
-          <Image source={{ uri: pokemonDetails.sprites.front_default }} style={{ width: 100, height: 100 }} />
-          <Text>Peso: {pokemonDetails.weight}</Text>
-          <Text>Altura: {pokemonDetails.height}</Text>
+          <Text>{pokemon.name}</Text>
+          <Image source={{ uri: pokemon.sprites.front_default }} style={{ width: 100, height: 100 }} />
+          <Text>Peso: {pokemon.weight}</Text>
+          <Text>Altura: {pokemon.height}</Text>
         </>
       ) : (
         <Text>Cargando...</Text>
