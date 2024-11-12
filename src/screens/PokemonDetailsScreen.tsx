@@ -1,36 +1,99 @@
-import React, { useEffect } from 'react';
-import { View, Text, Image, useWindowDimensions } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchPokemonDetails } from '../redux/actions/pokemonActions';
-import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
+import React from 'react';
+import { View, Text, Image, useWindowDimensions, StyleSheet } from 'react-native';
 import { PokemonTypeImage } from '../util/ui';
 
 const PokemonDetailsScreen = ({ route }: any) => {
   const { pokemon } = route.params;
-  console.log(JSON.stringify(pokemon))
-  // const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch();
-  // const pokemonDetails = useSelector((state: any) => state.pokemon.pokemonDetails);
-
-  // useEffect(() => {
-  //   dispatch(fetchPokemonDetails(pokemon.url));
-  // }, [dispatch, pokemon]);
+  const { height } = useWindowDimensions();
 
   return (
-    <View style={{ padding: 20, height: useWindowDimensions().height }}>
-      <Text>{pokemon.name}</Text>
-      <Image source={{ uri: pokemon.sprites.front_default }} style={{ width: 100, height: 100 }} />
-      <Text>Peso: {pokemon.weight}</Text>
-      <Text>Altura: {pokemon.height}</Text>
-      <View style={{ flexDirection: 'row' }}>
-        {pokemon.types.map((item: { type: { name: string } }) => {
-          return (
-            <PokemonTypeImage type={item.type.name} />
-          )
-        })}
+    <View style={[styles.container, { height }]}>
+      <Text style={styles.title}>{pokemon.name.toUpperCase()}</Text>
+
+      {/* Imagen del Pokémon */}
+      <Image source={{ uri: pokemon.sprites.front_default }} style={styles.image} />
+
+      {/* Tipos */}
+      <View style={styles.typesContainer}>
+        {pokemon.types.map((item: { type: { name: string } }) => (
+          <PokemonTypeImage key={item.type.name} type={item.type.name} />
+        ))}
+      </View>
+
+      
+      {/* Información básica */}
+      <Text style={styles.text}>Peso: {pokemon.weight / 10} kg</Text>
+      <Text style={styles.text}>Altura: {pokemon.height / 10} m</Text>
+
+
+      {/* Habilidades */}
+      <Text style={styles.subTitle}>Habilidades</Text>
+      <View>
+        {pokemon.abilities.map((ability: { ability: { name: string }, is_hidden: boolean }) => (
+          <Text key={ability.ability.name} style={styles.text}>
+            {ability.ability.name} {ability.is_hidden ? "(Hidden)" : ""}
+          </Text>
+        ))}
+      </View>
+
+      {/* Estadísticas */}
+      <Text style={styles.subTitle}>Estadísticas</Text>
+      {pokemon.stats.map((stat: { base_stat: number; stat: { name: string } }) => (
+        <Text key={stat.stat.name} style={styles.text}>
+          {stat.stat.name.toUpperCase()}: {stat.base_stat}
+        </Text>
+      ))}
+
+      {/* Movimientos */}
+      <Text style={styles.subTitle}>Movimientos</Text>
+      <View style={styles.movesContainer}>
+        {pokemon.moves.slice(0, 5).map((move: { move: { name: string } }) => (
+          <Text key={move.move.name} style={styles.text}>
+            {move.move.name}
+          </Text>
+        ))}
       </View>
     </View>
   );
 };
 
 export default PokemonDetailsScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  image: {
+    width: 150,
+    height: 150,
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  text: {
+    fontSize: 16,
+    marginVertical: 2,
+  },
+  subTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginTop: 15,
+    marginBottom: 5,
+  },
+  typesContainer: {
+    width: 80,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    alignSelf:'center'
+  },
+  movesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+});
