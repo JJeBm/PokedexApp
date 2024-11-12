@@ -11,7 +11,6 @@ const PokemonDetailsScreen = ({ route }: any) => {
   const pokemonDetails = useSelector((state: any) => state.pokemon.pokemonDetails);
 
   useEffect(() => {
-    console.log(pokemon)
     dispatch(fetchPokemonDetails(pokemon.url));
   }, [dispatch, pokemon]);
 

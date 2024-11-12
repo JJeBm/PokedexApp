@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPokemons } from '../redux/actions/pokemonActions';
+import { PokemonItem } from '../redux/reducers/types';
 
 const PokemonListScreen = ({ navigation }: any) => {
-  // Cambia el tipo de dispatch para que acepte Thunks
   const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch();
   const pokemons = useSelector((state: any) => state.pokemon.pokemons);
   const [search, setSearch] = useState('');
@@ -15,7 +15,7 @@ const PokemonListScreen = ({ navigation }: any) => {
     dispatch(fetchPokemons());
   }, [dispatch]);
 
-  const filteredPokemons = pokemons.filter((pokemon: any) =>
+  const filteredPokemons = pokemons.filter((pokemon: PokemonItem) =>
     pokemon.name.toLowerCase().includes(search.toLowerCase())
   );
 
