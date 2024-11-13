@@ -4,18 +4,17 @@ import { useNavigation } from '@react-navigation/native';
 
 type HeaderProps = {
     title: string;
-    onBackPress?: () => void; // Acción personalizada opcional para el botón de atrás
+    onBackPress?: () => void;
 };
 
 const Header: React.FC<HeaderProps> = ({ title, onBackPress }) => {
     const navigation = useNavigation();
 
-    // Función que maneja el botón de atrás
     const handleBackPress = () => {
         if (onBackPress) {
-            onBackPress(); // Si hay una acción personalizada, la ejecuta
+            onBackPress();
         } else {
-            navigation.goBack(); // Si no, usa la navegación predeterminada
+            navigation.goBack();
         }
     };
 

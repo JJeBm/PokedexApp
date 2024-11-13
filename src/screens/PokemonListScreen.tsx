@@ -11,7 +11,6 @@ const PokemonListScreen = ({ navigation }: any) => {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    // Solo realiza la carga inicial si nextUrl es la URL base
     if (nextUrl === 'https://pokeapi.co/api/v2/pokemon/') {
       dispatch(fetchPokemonsWithDetails(nextUrl));
     }
@@ -30,24 +29,22 @@ const PokemonListScreen = ({ navigation }: any) => {
       [
         {
           text: "Cancelar",
-          onPress: () => null, // Si cancela, no hace nada
+          onPress: () => null,
           style: "cancel",
         },
         {
           text: "Salir",
-          onPress: () => BackHandler.exitApp(), // Si confirma, sale de la app
+          onPress: () => BackHandler.exitApp(),
         },
       ],
-      { cancelable: false } // Para que no se cierre si toca fuera del alert
+      { cancelable: false }
     );
-    return true; // Esto previene que la aplicación se cierre de forma predeterminada
+    return true;
   };
 
   useEffect(() => {
-    // Agregar el listener para cuando el usuario presione el botón de atrás
     BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-    // Limpiar el listener cuando el componente se desmonte
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
     };
@@ -59,7 +56,7 @@ const PokemonListScreen = ({ navigation }: any) => {
 
   const loadMorePokemons = () => {
     if (nextUrl && !loading) {
-      dispatch(fetchPokemonsWithDetails(nextUrl)); // Llama a la URL `nextUrl` para obtener la siguiente página
+      dispatch(fetchPokemonsWithDetails(nextUrl));
     }
   };
 

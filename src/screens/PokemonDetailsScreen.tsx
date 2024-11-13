@@ -7,8 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 const PokemonDetailsScreen = ({ route }: any) => {
   const { pokemon } = route.params;
   const [currentSprite, setCurrentSprite] = useState(pokemon.sprites.front_default);
-  const [selectedSprite, setSelectedSprite] = useState('front_default'); // Estado para el botón seleccionado
-  console.log(pokemon.moves)
+  const [selectedSprite, setSelectedSprite] = useState('front_default');
 
   const sprites = {
     front_default: pokemon.sprites.front_default,
@@ -20,7 +19,7 @@ const PokemonDetailsScreen = ({ route }: any) => {
   const changeSprite = (spriteKey: keyof typeof sprites) => {
     if (sprites[spriteKey]) {
       setCurrentSprite(sprites[spriteKey]);
-      setSelectedSprite(spriteKey); // Cambiar el botón seleccionado
+      setSelectedSprite(spriteKey);
     }
   };
 
@@ -45,14 +44,12 @@ const PokemonDetailsScreen = ({ route }: any) => {
 
   const handleBackPress = () => {
     navigation.goBack()
-    return true; // Esto previene que la aplicación se cierre de forma predeterminada
+    return true;
   };
 
   useEffect(() => {
-    // Agregar el listener para cuando el usuario presione el botón de atrás
     BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-    // Limpiar el listener cuando el componente se desmonte
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
     };
@@ -150,7 +147,6 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   selectedText: {
-    color: 'blue', // Cambia el color a tu preferencia
     fontWeight: 'bold',
   },
   subTitle: {
