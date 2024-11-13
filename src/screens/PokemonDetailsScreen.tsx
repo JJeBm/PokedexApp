@@ -1,23 +1,38 @@
-import React from 'react';
-import { View, Text, Image, useWindowDimensions, StyleSheet, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Header, PokemonTypeImage } from '../util/ui';
 import { typeColors } from '../util/ui/typesComponent';
 
 const PokemonDetailsScreen = ({ route }: any) => {
   const { pokemon } = route.params;
-  const { height } = useWindowDimensions();
+  const [currentSprite, setCurrentSprite] = useState(pokemon.sprites.front_default);
+  const [selectedSprite, setSelectedSprite] = useState('front_default'); // Estado para el botón seleccionado
+  console.log(pokemon.moves)
+
+  const sprites = {
+    front_default: pokemon.sprites.front_default,
+    back_default: pokemon.sprites.back_default,
+    front_shiny: pokemon.sprites.front_shiny,
+    back_shiny: pokemon.sprites.back_shiny,
+  };
+
+  const changeSprite = (spriteKey: keyof typeof sprites) => {
+    if (sprites[spriteKey]) {
+      setCurrentSprite(sprites[spriteKey]);
+      setSelectedSprite(spriteKey); // Cambiar el botón seleccionado
+    }
+  };
+
   const isSingleType = pokemon.types.length === 1;
   const primary = typeColors[pokemon.types[0]?.type.name];
   const secundary = typeColors[pokemon.types[1]?.type.name];
   const primary_2 = primary + "50";
   const secundary_2 = secundary + "50";
 
-  // Función para obtener los colores
   const getColor = (type = 1) => {
     return type === 2 && secundary ? [secundary, secundary_2] : [primary, primary_2];
   };
 
-  // Componente auxiliar para los contenedores con fondo y bordes
   const InfoContainer = ({ children, type = 1 }) => {
     const color = getColor(type);
     return (
@@ -28,10 +43,20 @@ const PokemonDetailsScreen = ({ route }: any) => {
   };
 
   return (
-    <View style={[styles.container, { height }]}>
+    <View style={[styles.container]}>
       <Header title={pokemon.name.toUpperCase()} />
 
-      <Image source={{ uri: pokemon.sprites.front_default }} style={styles.image} />
+      <Image source={{ uri: currentSprite }} style={styles.image} />
+
+      <View style={styles.spriteButtons}>
+        {Object.keys(sprites).map((key) => (
+          <TouchableOpacity key={key} onPress={() => changeSprite(key as keyof typeof sprites)}>
+            <Text style={[styles.text, selectedSprite === key && [styles.selectedText, { color: primary }]]}>
+              {key.replace('_', ' ')}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
       <View style={[styles.typesContainer, isSingleType && styles.singleTypeContainer]}>
         {pokemon.types.map((item: { type: { name: string } }) => (
@@ -43,7 +68,6 @@ const PokemonDetailsScreen = ({ route }: any) => {
         <Text style={styles.text}>Peso: {pokemon.weight / 10} kg</Text>
         <Text style={styles.text}>Altura: {pokemon.height / 10} m</Text>
       </InfoContainer>
-
 
       <Text style={styles.subTitle}>Habilidades</Text>
       <InfoContainer type={2}>
@@ -70,19 +94,19 @@ const PokemonDetailsScreen = ({ route }: any) => {
         ))}
       </InfoContainer>
 
-
-      <Text style={styles.subTitle}>Movimientos</Text>
-      <View style={{ backgroundColor: getColor(2)[1], borderRadius: 20, padding: 10, borderColor: getColor(2)[0], borderWidth: 1, flex: 1 }}>
-        <FlatList
-          data={pokemon.moves}
-          numColumns={2}
-          columnWrapperStyle={styles.columnWrapperStyle}
-          keyExtractor={(item) => item.move.name}
-          renderItem={({ item }) => (
-            <Text style={styles.text}>{`${item.move.name}`}</Text>
-          )}
-        />
-      </View>
+      {pokemon.moves && pokemon.moves.length > 0 && (
+        <>
+          <Text style={styles.subTitle}>Movimientos</Text><View style={{ backgroundColor: getColor(2)[1], borderRadius: 20, padding: 10, borderColor: getColor(2)[0], borderWidth: 1, flex: 1 }}>
+            <FlatList
+              data={pokemon.moves}
+              numColumns={2}
+              columnWrapperStyle={styles.columnWrapperStyle}
+              keyExtractor={(item) => item.move.name}
+              renderItem={({ item }) => (
+                <Text style={styles.text}>{`${item.move.name}`}</Text>
+              )} />
+          </View>
+        </>)}
     </View>
   );
 };
@@ -94,21 +118,24 @@ const styles = StyleSheet.create({
     padding: 20,
     flex: 1,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
   image: {
     width: 150,
     height: 150,
     alignSelf: 'center',
-    marginBottom: 0,
+  },
+  spriteButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 10,
   },
   text: {
     fontSize: 13,
     marginVertical: 2,
+    color: 'gray',
+  },
+  selectedText: {
+    color: 'blue', // Cambia el color a tu preferencia
+    fontWeight: 'bold',
   },
   subTitle: {
     fontSize: 15,

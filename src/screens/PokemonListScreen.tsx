@@ -94,7 +94,7 @@ const PokemonListScreen = ({ navigation }: any) => {
     <View style={{ padding: 20, height: useWindowDimensions().height }}>
       <Header title='Pokedex' onBackPress={() => handleBackPress()} />
       <TextInput
-        placeholder="Buscar Pokémon"
+        placeholder="Pokémon ..."
         value={search}
         onChangeText={setSearch}
         style={styles.searchInput}
@@ -114,7 +114,9 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 8,
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 20,
+    borderColor: "#ccc",
+    paddingHorizontal: 20
   },
   pokemonCard: {
     flexDirection: 'row',
