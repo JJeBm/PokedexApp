@@ -1,3 +1,3 @@
 import PokemonTypeImage from "./typesComponent";
-
-export {PokemonTypeImage}
+import Header from "./headerComponent";
+export {PokemonTypeImage, Header}

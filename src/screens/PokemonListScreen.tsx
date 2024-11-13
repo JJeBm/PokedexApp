@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, TextInput, TouchableOpacity, StyleSheet, Image, useWindowDimensions, ActivityIndicator } from 'react-native';
+import { View, FlatList, Text, TextInput, TouchableOpacity, StyleSheet, Image, useWindowDimensions, ActivityIndicator, Alert, BackHandler } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPokemonsWithDetails } from '../redux/actions/pokemonActions';
-import { PokemonTypeImage } from '../util/ui';
+import { Header, PokemonTypeImage } from '../util/ui';
 import { PokemonDetails } from '../redux/reducers/types';
 
 const PokemonListScreen = ({ navigation }: any) => {
@@ -18,11 +18,40 @@ const PokemonListScreen = ({ navigation }: any) => {
   }, [dispatch, nextUrl]);
 
   useEffect(() => {
-    // Llama a loadMorePokemons automáticamente cada vez que termina una llamada anterior (cuando loading cambia de true a false)
     if (!loading && nextUrl) {
       loadMorePokemons();
     }
   }, [loading, nextUrl]);
+
+  const handleBackPress = () => {
+    Alert.alert(
+      "Salir de la aplicación",
+      "¿Estás seguro de que quieres salir?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => null, // Si cancela, no hace nada
+          style: "cancel",
+        },
+        {
+          text: "Salir",
+          onPress: () => BackHandler.exitApp(), // Si confirma, sale de la app
+        },
+      ],
+      { cancelable: false } // Para que no se cierre si toca fuera del alert
+    );
+    return true; // Esto previene que la aplicación se cierre de forma predeterminada
+  };
+
+  useEffect(() => {
+    // Agregar el listener para cuando el usuario presione el botón de atrás
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    // Limpiar el listener cuando el componente se desmonte
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
 
   const filteredPokemons = pokemons.filter((pokemon: PokemonDetails) =>
     pokemon.name.toLowerCase().includes(search.toLowerCase())
@@ -63,6 +92,7 @@ const PokemonListScreen = ({ navigation }: any) => {
 
   return (
     <View style={{ padding: 20, height: useWindowDimensions().height }}>
+      <Header title='Pokedex' onBackPress={() => handleBackPress()} />
       <TextInput
         placeholder="Buscar Pokémon"
         value={search}

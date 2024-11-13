@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, useWindowDimensions, StyleSheet, FlatList } from 'react-native';
-import { PokemonTypeImage } from '../util/ui';
+import { Header, PokemonTypeImage } from '../util/ui';
 import { typeColors } from '../util/ui/typesComponent';
 
 const PokemonDetailsScreen = ({ route }: any) => {
@@ -20,7 +20,7 @@ const PokemonDetailsScreen = ({ route }: any) => {
   }
   return (
     <View style={[styles.container, { height }]}>
-      <Text style={styles.title}>{pokemon.name.toUpperCase()}</Text>
+      <Header title={pokemon.name.toUpperCase()} />
 
       <Image source={{ uri: pokemon.sprites.front_default }} style={styles.image} />
 
@@ -38,9 +38,11 @@ const PokemonDetailsScreen = ({ route }: any) => {
       <Text style={styles.subTitle}>Habilidades</Text>
       <View style={{ backgroundColor: getColor(2)[1], borderRadius: 20, padding: 10, borderColor: getColor(2)[0], borderWidth: 1 }}>
         {pokemon.abilities.map((ability: { ability: { name: string }, is_hidden: boolean }) => (
-          <Text key={ability.ability.name} style={styles.text}>
-            {ability.ability.name} {ability.is_hidden ? "(Hidden)" : ""}
-          </Text>
+          <View style={styles.statsContainer}>
+            <Text key={ability.ability.name} style={styles.text}>
+              {ability.ability.name} {ability.is_hidden ? "(Hidden)" : ""}
+            </Text>
+          </View>
         ))}
       </View>
 
@@ -59,7 +61,7 @@ const PokemonDetailsScreen = ({ route }: any) => {
       </View>
 
       <Text style={styles.subTitle}>Movimientos</Text>
-      <View style={{ backgroundColor: getColor(2)[1], borderRadius: 20, padding: 10, borderColor: getColor(2)[0], borderWidth: 1, flex:1 }}>
+      <View style={{ backgroundColor: getColor(2)[1], borderRadius: 20, padding: 10, borderColor: getColor(2)[0], borderWidth: 1, flex: 1 }}>
         <FlatList
           data={pokemon.moves}
           numColumns={2}
