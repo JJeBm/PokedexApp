@@ -1,33 +1,27 @@
 import React from 'react';
-import { View, Text, Image, useWindowDimensions, StyleSheet } from 'react-native';
+import { View, Text, Image, useWindowDimensions, StyleSheet, FlatList } from 'react-native';
 import { PokemonTypeImage } from '../util/ui';
 
 const PokemonDetailsScreen = ({ route }: any) => {
   const { pokemon } = route.params;
   const { height } = useWindowDimensions();
   const isSingleType = pokemon.types.length === 1;
-  console.log(pokemon)
+  console.log(pokemon.moves)
   return (
     <View style={[styles.container, { height }]}>
       <Text style={styles.title}>{pokemon.name.toUpperCase()}</Text>
 
-      {/* Imagen del Pokémon */}
       <Image source={{ uri: pokemon.sprites.front_default }} style={styles.image} />
 
-      {/* Tipos */}
       <View style={[styles.typesContainer, isSingleType && styles.singleTypeContainer]}>
         {pokemon.types.map((item: { type: { name: string } }) => (
           <PokemonTypeImage key={item.type.name} type={item.type.name} />
         ))}
       </View>
 
-      
-      {/* Información básica */}
       <Text style={styles.text}>Peso: {pokemon.weight / 10} kg</Text>
       <Text style={styles.text}>Altura: {pokemon.height / 10} m</Text>
 
-
-      {/* Habilidades */}
       <Text style={styles.subTitle}>Habilidades</Text>
       <View>
         {pokemon.abilities.map((ability: { ability: { name: string }, is_hidden: boolean }) => (
@@ -37,23 +31,31 @@ const PokemonDetailsScreen = ({ route }: any) => {
         ))}
       </View>
 
-      {/* Estadísticas */}
       <Text style={styles.subTitle}>Estadísticas</Text>
-      {pokemon.stats.map((stat: { base_stat: number; stat: { name: string } }) => (
-        <Text key={stat.stat.name} style={styles.text}>
-          {stat.stat.name.toUpperCase()}: {stat.base_stat}
-        </Text>
-      ))}
+      <FlatList
+        data={pokemon.stats}
+        keyExtractor={(item) => item.stat.name}
+        renderItem={({ item }) => (
+          <View style={styles.statRow}>
+            <Text style={styles.text}>{item.stat.name.toUpperCase()}</Text>
+            <Text style={styles.text}>{item.base_stat}</Text>
+          </View>
+        )}
+      />
 
-      {/* Movimientos */}
       <Text style={styles.subTitle}>Movimientos</Text>
-      <View style={styles.movesContainer}>
-        {pokemon.moves.slice(0, 5).map((move: { move: { name: string } }) => (
-          <Text key={move.move.name} style={styles.text}>
-            {`${move.move.name}  `}
+      <FlatList
+        data={pokemon.moves}
+        style={styles.movesContainer}
+        numColumns={2}
+        columnWrapperStyle={styles.columnWrapperStyle}
+        keyExtractor={(item) => item.move.name}
+        renderItem={({ item }) => (
+          <Text style={styles.text}>
+            {`${item.move.name}`}
           </Text>
-        ))}
-      </View>
+        )}
+      />
     </View>
   );
 };
@@ -63,6 +65,7 @@ export default PokemonDetailsScreen;
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    flex: 1,
   },
   title: {
     fontSize: 28,
@@ -91,13 +94,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
-    alignSelf:'center'
+    alignSelf: 'center',
   },
   movesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flex: 1,
   },
   singleTypeContainer: {
-    justifyContent: 'center',  // Centra el icono si hay un solo tipo
+    justifyContent: 'center',
+  },
+  columnWrapperStyle: {
+    justifyContent: 'space-between',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  statRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
   },
 });
