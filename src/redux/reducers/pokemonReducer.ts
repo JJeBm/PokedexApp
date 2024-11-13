@@ -1,64 +1,37 @@
-import { PokemonDetails, PokemonItem } from "./types";
+
+import { PokemonDetails } from "./types";
 
 interface PokemonState {
-  pokemons: PokemonItem[] | [];
-  pokemonDetails: PokemonDetails | null;
-  loadingFetchPokemons: boolean;
-  loadingPokemonsDetails: boolean;
+  pokemons: PokemonDetails[] | [];
+  loading: boolean;
+  nextUrl: string | null | undefined;
+  error: any;
 }
 
-const initialState: PokemonState = {
-  pokemons: [],
-  pokemonDetails: null,
-  loadingFetchPokemons: false,
-  loadingPokemonsDetails: false,
+const initialState : PokemonState = {
+  pokemons:[],
+  loading: false,
+  nextUrl: 'https://pokeapi.co/api/v2/pokemon/', // URL inicial
+  error: null,
 };
 
 const pokemonReducer = (state = initialState, action: any) => {
   switch (action.type) {
-
     case 'FETCH_POKEMONS_REQUEST':
-      return {
-        ...state,
-        loadingFetchPokemons: true,
-        pokemons: [],
-      };
+      return { ...state, loading: true };
     case 'FETCH_POKEMONS_SUCCESS':
       return {
         ...state,
-        pokemons: [...state.pokemons, ...action.payload],
-        loadingFetchPokemons: false, 
+        pokemons: action.payload,
+        nextUrl: action.nextUrl, // Almacena la próxima URL
+        loading: false,
       };
     case 'FETCH_POKEMONS_FAILURE':
-      return {
-        ...state,
-        loadingFetchPokemons: false,
-      };
-
-
-
-
-
-    case 'FETCH_POKEMON_DETAILS_REQUEST':
-      return {
-        ...state,
-        loadingPokemonsDetails: true,
-        pokemonDetails: null,
-      };
-    case 'FETCH_POKEMON_DETAILS_SUCCESS':
-      return {
-        ...state,
-        pokemonDetails: action.payload,
-        loadingPokemonsDetails: false,
-      };
-    case 'FETCH_POKEMON_DETAILS_FAILURE':
-      return {
-        ...state,
-        loadingPokemonsDetails: false,
-      };
+      return { ...state, loading: false, error: action.error };
     default:
       return state;
   }
 };
+
 
 export default pokemonReducer;

@@ -1,43 +1,65 @@
-import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, TextInput, TouchableOpacity, StyleSheet, Image, useWindowDimensions } from 'react-native';
+import { View, FlatList, Text, TextInput, TouchableOpacity, StyleSheet, Image, useWindowDimensions, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPokemonsWithDetails } from '../redux/actions/pokemonActions';
-import { PokemonDetails } from '../redux/reducers/types';
 import { PokemonTypeImage } from '../util/ui';
+import { PokemonDetails } from '../redux/reducers/types';
 
 const PokemonListScreen = ({ navigation }: any) => {
-  const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch();
-  const pokemons = useSelector((state: any) => state.pokemon.pokemons);
+  const dispatch = useDispatch();
+  const { pokemons, nextUrl, loading } = useSelector((state: any) => state.pokemon);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    dispatch(fetchPokemonsWithDetails());
-  }, [dispatch]);
+    // Solo realiza la carga inicial si nextUrl es la URL base
+    if (nextUrl === 'https://pokeapi.co/api/v2/pokemon/') {
+      dispatch(fetchPokemonsWithDetails(nextUrl));
+    }
+  }, [dispatch, nextUrl]);
+
+  useEffect(() => {
+    // Llama a loadMorePokemons automáticamente cada vez que termina una llamada anterior (cuando loading cambia de true a false)
+    if (!loading && nextUrl) {
+      loadMorePokemons();
+    }
+  }, [loading, nextUrl]);
 
   const filteredPokemons = pokemons.filter((pokemon: PokemonDetails) =>
     pokemon.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const loadMorePokemons = () => {
+    if (nextUrl && !loading) {
+      dispatch(fetchPokemonsWithDetails(nextUrl)); // Llama a la URL `nextUrl` para obtener la siguiente página
+    }
+  };
+
   const renderItem = ({ item }: { item: PokemonDetails }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('PokemonDetails', { pokemon: item })} style={styles.pokemonCard}> 
+    <TouchableOpacity onPress={() => navigation.navigate('PokemonDetails', { pokemon: item })} style={styles.pokemonCard}>
       <Image source={{ uri: item.sprites.front_default }} style={styles.pokemonImage} />
       <View style={styles.pokemonData}>
         <View style={styles.pokemonInfo}>
-          <Text style={styles.pokemonName}>{item.id + " - " +item.name}</Text>
+          <Text style={styles.pokemonName}>{item.id + " - " + item.name}</Text>
           <Text style={styles.pokemonDetails}>Peso: {item.weight / 10} kg</Text>
           <Text style={styles.pokemonDetails}>Altura: {item.height / 10} m</Text>
         </View>
-
         <View style={styles.pokemonType}>
-          {item.types.map((item: { type: { name: string } }) => (
-            <PokemonTypeImage key={item.type.name} type={item.type.name} />
+          {item.types.map((type: { type: { name: string; }; }) => (
+            <PokemonTypeImage key={type.type.name} type={type.type.name} />
           ))}
         </View>
       </View>
     </TouchableOpacity>
   );
+
+  const renderLoading = () => {
+    if (loading) {
+      return (
+        <ActivityIndicator style={{ alignSelf: 'center', marginTop: 10 }} />
+      )
+    }
+  }
+
 
   return (
     <View style={{ padding: 20, height: useWindowDimensions().height }}>
@@ -49,9 +71,9 @@ const PokemonListScreen = ({ navigation }: any) => {
       />
       <FlatList
         data={filteredPokemons}
-        // showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.name}
         renderItem={renderItem}
+        ListFooterComponent={renderLoading()}
       />
     </View>
   );
@@ -95,7 +117,7 @@ const styles = StyleSheet.create({
     flex: .25,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems:'center'
+    alignItems: 'center'
   }
 });
 

@@ -3,7 +3,11 @@ import rootReducer from './reducers';
 
 const store = configureStore({
   reducer: rootReducer,
-  devTools: process.env.NODE_ENV !== 'production', // Puedes desactivar devTools en producción
+  middleware: (getDefaultMiddleware) =>
+  getDefaultMiddleware({
+    immutableCheck: false, 
+    serializableCheck: false,
+  }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

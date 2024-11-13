@@ -23,31 +23,29 @@ export const fetchPokemonDetails = (urlPokemon: string) => async (dispatch: Disp
   }
 };
 
+export const fetchPokemonsWithDetails = (nextUrl: string) => async (dispatch: (arg0: { type: string; payload?: any[]; nextUrl?: any; }) => void, getState: () => { pokemon: any; }) => {
+  const { pokemon } = getState();
+  
+  if (!nextUrl) return; // Si no hay más URL, no realizar otra solicitud
 
-export const fetchPokemonsWithDetails = () => async (dispatch: Dispatch) => {
-  dispatch({ type: 'FETCH_POKEMONS_REQUEST' }); // Inicia el loading y limpia los pokemons
+  dispatch({ type: 'FETCH_POKEMONS_REQUEST' });
   try {
-    // Paso 1: Obtener el listado de Pokémon
-    const response = await axios.get('https://pokeapi.co/api/v2/pokemon/');
+    const response = await axios.get(nextUrl);
     const pokemonsList = response.data.results;
+    const next = response.data.next; // URL de la siguiente página
 
-    // Paso 2: Obtener los detalles de cada Pokémon en paralelo
-    const pokemonDetailsPromises = pokemonsList.map((pokemon: { url: string }) =>
-      axios.get(pokemon.url)
-    );
-
+    const pokemonDetailsPromises = pokemonsList.map((pokemon: { url: string; }) => axios.get(pokemon.url));
     const pokemonDetailsResponses = await Promise.all(pokemonDetailsPromises);
-
-    // Paso 3: Guardar el listado de Pokémon junto con los detalles
     const pokemonsWithDetails = pokemonDetailsResponses.map((response) => response.data);
 
-    // Disparar acción con el listado de Pokémon completo (detalles incluidos)
+    // Concatenar los nuevos Pokémon con los existentes en el estado
     dispatch({
       type: 'FETCH_POKEMONS_SUCCESS',
-      payload: pokemonsWithDetails,
+      payload: [...pokemon.pokemons, ...pokemonsWithDetails],
+      nextUrl: next, // Guardar la URL de la siguiente página
     });
   } catch (error) {
-    dispatch({ type: 'FETCH_POKEMONS_FAILURE' }); // Detiene el loading en caso de error
+    dispatch({ type: 'FETCH_POKEMONS_FAILURE' });
     console.error('Error fetching pokemons with details:', error);
   }
 };
