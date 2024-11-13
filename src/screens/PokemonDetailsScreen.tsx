@@ -32,16 +32,16 @@ const PokemonDetailsScreen = ({ route }: any) => {
       </View>
 
       <Text style={styles.subTitle}>Estadísticas</Text>
-      <FlatList
-        data={pokemon.stats}
-        keyExtractor={(item) => item.stat.name}
-        renderItem={({ item }) => (
-          <View style={styles.statRow}>
-            <Text style={styles.text}>{item.stat.name.toUpperCase()}</Text>
-            <Text style={styles.text}>{item.base_stat}</Text>
-          </View>
-        )}
-      />
+      {pokemon.stats.map((stat: { base_stat: number; stat: { name: string } }) => (
+        <View style={styles.statsContainer}>
+          <Text style={styles.text}>
+            {stat.stat.name.toUpperCase()}
+          </Text>
+          <Text style={styles.text}>
+            {stat.base_stat}
+          </Text>
+        </View>
+      ))}
 
       <Text style={styles.subTitle}>Movimientos</Text>
       <FlatList
@@ -104,15 +104,14 @@ const styles = StyleSheet.create({
   },
   columnWrapperStyle: {
     justifyContent: 'space-between',
-    padding: 10,
+    padding: 6,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
-  statRow: {
+  statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-  },
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  }
 });
