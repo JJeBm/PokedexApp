@@ -7,17 +7,26 @@ const PokemonDetailsScreen = ({ route }: any) => {
   const { pokemon } = route.params;
   const { height } = useWindowDimensions();
   const isSingleType = pokemon.types.length === 1;
-  const primary = typeColors[pokemon.types[0]?.type.name]
-  const secundary = typeColors[pokemon.types[1]?.type.name]
-  const primary_2 = primary + "50"
-  const secundary_2 = secundary + "50"
+  const primary = typeColors[pokemon.types[0]?.type.name];
+  const secundary = typeColors[pokemon.types[1]?.type.name];
+  const primary_2 = primary + "50";
+  const secundary_2 = secundary + "50";
 
+  // Función para obtener los colores
   const getColor = (type = 1) => {
-    if (type === 2 && secundary) {
-      return [secundary, secundary_2]
-    }
-    return [primary, primary_2]
-  }
+    return type === 2 && secundary ? [secundary, secundary_2] : [primary, primary_2];
+  };
+
+  // Componente auxiliar para los contenedores con fondo y bordes
+  const InfoContainer = ({ children, type = 1 }) => {
+    const color = getColor(type);
+    return (
+      <View style={{ backgroundColor: color[1], borderRadius: 20, padding: 10, borderColor: color[0], borderWidth: 1 }}>
+        {children}
+      </View>
+    );
+  };
+
   return (
     <View style={[styles.container, { height }]}>
       <Header title={pokemon.name.toUpperCase()} />
@@ -30,26 +39,27 @@ const PokemonDetailsScreen = ({ route }: any) => {
         ))}
       </View>
 
-      <View style={{ backgroundColor: getColor(1)[1], borderRadius: 20, padding: 10, borderColor: getColor(1)[0], borderWidth: 1 }}>
+      <InfoContainer>
         <Text style={styles.text}>Peso: {pokemon.weight / 10} kg</Text>
         <Text style={styles.text}>Altura: {pokemon.height / 10} m</Text>
-      </View>
+      </InfoContainer>
+
 
       <Text style={styles.subTitle}>Habilidades</Text>
-      <View style={{ backgroundColor: getColor(2)[1], borderRadius: 20, padding: 10, borderColor: getColor(2)[0], borderWidth: 1 }}>
+      <InfoContainer type={2}>
         {pokemon.abilities.map((ability: { ability: { name: string }, is_hidden: boolean }) => (
-          <View style={styles.statsContainer}>
-            <Text key={ability.ability.name} style={styles.text}>
+          <View style={styles.statsContainer} key={ability.ability.name}>
+            <Text style={styles.text}>
               {ability.ability.name} {ability.is_hidden ? "(Hidden)" : ""}
             </Text>
           </View>
         ))}
-      </View>
+      </InfoContainer>
 
       <Text style={styles.subTitle}>Estadísticas</Text>
-      <View style={{ backgroundColor: getColor(1)[1], borderRadius: 20, padding: 10, borderColor: getColor(1)[0], borderWidth: 1 }}>
+      <InfoContainer>
         {pokemon.stats.map((stat: { base_stat: number; stat: { name: string } }) => (
-          <View style={styles.statsContainer}>
+          <View style={styles.statsContainer} key={stat.stat.name}>
             <Text style={styles.text}>
               {stat.stat.name.toUpperCase()}
             </Text>
@@ -58,7 +68,8 @@ const PokemonDetailsScreen = ({ route }: any) => {
             </Text>
           </View>
         ))}
-      </View>
+      </InfoContainer>
+
 
       <Text style={styles.subTitle}>Movimientos</Text>
       <View style={{ backgroundColor: getColor(2)[1], borderRadius: 20, padding: 10, borderColor: getColor(2)[0], borderWidth: 1, flex: 1 }}>
@@ -68,9 +79,7 @@ const PokemonDetailsScreen = ({ route }: any) => {
           columnWrapperStyle={styles.columnWrapperStyle}
           keyExtractor={(item) => item.move.name}
           renderItem={({ item }) => (
-            <Text style={styles.text}>
-              {`${item.move.name}`}
-            </Text>
+            <Text style={styles.text}>{`${item.move.name}`}</Text>
           )}
         />
       </View>
@@ -114,9 +123,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignSelf: 'center',
   },
-  movesContainer: {
-    flex: 1,
-  },
   singleTypeContainer: {
     justifyContent: 'center',
   },
@@ -125,6 +131,7 @@ const styles = StyleSheet.create({
     padding: 6,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    flex: 1
   },
   statsContainer: {
     flexDirection: 'row',
