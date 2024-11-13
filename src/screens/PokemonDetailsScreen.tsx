@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, BackHandler } from 'react-native';
 import { Header, PokemonTypeImage } from '../util/ui';
 import { typeColors } from '../util/ui/typesComponent';
+import { useNavigation } from '@react-navigation/native';
 
 const PokemonDetailsScreen = ({ route }: any) => {
   const { pokemon } = route.params;
@@ -28,7 +29,7 @@ const PokemonDetailsScreen = ({ route }: any) => {
   const secundary = typeColors[pokemon.types[1]?.type.name];
   const primary_2 = primary + "50";
   const secundary_2 = secundary + "50";
-
+  const navigation = useNavigation()
   const getColor = (type = 1) => {
     return type === 2 && secundary ? [secundary, secundary_2] : [primary, primary_2];
   };
@@ -41,6 +42,21 @@ const PokemonDetailsScreen = ({ route }: any) => {
       </View>
     );
   };
+
+  const handleBackPress = () => {
+    navigation.goBack()
+    return true; // Esto previene que la aplicación se cierre de forma predeterminada
+  };
+
+  useEffect(() => {
+    // Agregar el listener para cuando el usuario presione el botón de atrás
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    // Limpiar el listener cuando el componente se desmonte
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
 
   return (
     <View style={[styles.container]}>

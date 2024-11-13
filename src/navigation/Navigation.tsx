@@ -3,7 +3,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import PokemonListScreen from '../screens/PokemonListScreen';
 import PokemonDetailsScreen from '../screens/PokemonDetailsScreen';
-import { PokemonItem } from '../redux/reducers/types';
 
 export type RootStackParamList = {
   PokemonList: undefined;
@@ -16,8 +15,16 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="PokemonList">
-        <Stack.Screen name="PokemonList" component={PokemonListScreen} options={{ headerShown: false }}  />
-        <Stack.Screen name="PokemonDetails" component={PokemonDetailsScreen} options={{ headerShown: false }}  />
+        <Stack.Screen 
+          name="PokemonList" 
+          component={PokemonListScreen} 
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen 
+          name="PokemonDetails" 
+          component={PokemonDetailsScreen} 
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
