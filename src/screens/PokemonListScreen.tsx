@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, TextInput, TouchableOpacity, StyleSheet, Image, useWindowDimensions, ActivityIndicator, Alert, BackHandler } from 'react-native';
+import { View, FlatList, Text, TextInput, TouchableOpacity, StyleSheet, Image, useWindowDimensions, ActivityIndicator, Alert, BackHandler, SafeAreaView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPokemonsWithDetails } from '../redux/actions/pokemonActions';
 import { Header, PokemonTypeImage } from '../util/ui';
@@ -88,7 +88,7 @@ const PokemonListScreen = ({ navigation }: any) => {
 
 
   return (
-    <View style={{ padding: 20, height: useWindowDimensions().height }}>
+    <SafeAreaView style={{ width: "90%", height: useWindowDimensions().height, alignSelf: 'center' }}>
       <Header title='Pokedex' onBackPress={() => handleBackPress()} />
       <TextInput
         placeholder="Pokémon ..."
@@ -102,7 +102,7 @@ const PokemonListScreen = ({ navigation }: any) => {
         renderItem={renderItem}
         ListFooterComponent={renderLoading()}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

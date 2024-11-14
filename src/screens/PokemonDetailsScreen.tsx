@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, BackHandler } from 'react-native';
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, BackHandler, SafeAreaView, useWindowDimensions } from 'react-native';
 import { Header, PokemonTypeImage } from '../util/ui';
 import { typeColors } from '../util/ui/typesComponent';
 import { useNavigation } from '@react-navigation/native';
@@ -16,12 +16,16 @@ const PokemonDetailsScreen = ({ route }: any) => {
     back_shiny: pokemon.sprites.back_shiny,
   };
 
+  // Filtrar los sprites para mostrar solo los disponibles (no nulos)
+  const availableSprites = Object.keys(sprites).filter((key) => sprites[key as keyof typeof sprites] !== null);
+
   const changeSprite = (spriteKey: keyof typeof sprites) => {
     if (sprites[spriteKey]) {
       setCurrentSprite(sprites[spriteKey]);
       setSelectedSprite(spriteKey);
     }
   };
+
 
   const isSingleType = pokemon.types.length === 1;
   const primary = typeColors[pokemon.types[0]?.type.name];
@@ -56,13 +60,13 @@ const PokemonDetailsScreen = ({ route }: any) => {
   }, []);
 
   return (
-    <View style={[styles.container]}>
+    <SafeAreaView style={{ width: "90%", height: useWindowDimensions().height, alignSelf: 'center' }}>
       <Header title={pokemon.name.toUpperCase()} />
 
       <Image source={{ uri: currentSprite }} style={styles.image} />
 
       <View style={styles.spriteButtons}>
-        {Object.keys(sprites).map((key) => (
+        {availableSprites.map((key) => (
           <TouchableOpacity key={key} onPress={() => changeSprite(key as keyof typeof sprites)}>
             <Text style={[styles.text, selectedSprite === key && [styles.selectedText, { color: primary }]]}>
               {key.replace('_', ' ')}
@@ -120,7 +124,7 @@ const PokemonDetailsScreen = ({ route }: any) => {
               )} />
           </View>
         </>)}
-    </View>
+    </SafeAreaView>
   );
 };
 
