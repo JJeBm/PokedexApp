@@ -60,7 +60,7 @@ const PokemonDetailsScreen = ({ route }: any) => {
   }, []);
 
   return (
-    <SafeAreaView style={{ width: "90%", height: useWindowDimensions().height, alignSelf: 'center' }}>
+    <SafeAreaView style={{ width: "90%", height: useWindowDimensions().height * .98, alignSelf: 'center' }}>
       <Header title={pokemon.name.toUpperCase()} />
 
       <Image source={{ uri: currentSprite }} style={styles.image} />
