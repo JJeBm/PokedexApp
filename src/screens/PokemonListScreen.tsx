@@ -89,7 +89,7 @@ const PokemonListScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={{ width: "90%", height: useWindowDimensions().height, alignSelf: 'center' }}>
-      <Header title='Pokedex' onBackPress={() => handleBackPress()} />
+      <Header title='Pokedex' onBackPress={() => handleBackPress()} isIOS />
       <TextInput
         placeholder="Pokémon ..."
         value={search}

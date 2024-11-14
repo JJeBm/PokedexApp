@@ -5,9 +5,10 @@ import { useNavigation } from '@react-navigation/native';
 type HeaderProps = {
     title: string;
     onBackPress?: () => void;
+    isIOS?: boolean
 };
 
-const Header: React.FC<HeaderProps> = ({ title, onBackPress }) => {
+const Header: React.FC<HeaderProps> = ({ title, onBackPress, isIOS = false }) => {
     const navigation = useNavigation();
 
     const handleBackPress = () => {
@@ -20,9 +21,9 @@ const Header: React.FC<HeaderProps> = ({ title, onBackPress }) => {
 
     return (
         <View style={styles.headerContainer}>
-            <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
+            {isIOS ? <View style={styles.backButton} /> : <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
                 <Text>{"<-"}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
             <Text style={styles.title}>{title}</Text>
             <View style={styles.backButton} />
         </View>
