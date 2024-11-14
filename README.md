@@ -3,7 +3,7 @@
 
 PokeApp es una pequeña pokedex simplificada que permite explorar una lista de Pokémon y ver información detallada sobre cada uno de ellos al seleccionarlo. La aplicación muestra datos como el peso, la altura, las habilidades, y los movimientos de cada Pokémon, junto con imágenes de sus diferentes versiones.
 
-# Paso 1: Instalar dependencias
+## Paso 1: Instalar dependencias
 
 Primero, instala las dependencias del proyecto
 
