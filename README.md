@@ -1,48 +1,46 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-# Getting Started
+PokeApp es una pequeña pokedex simplificada que permite explorar una lista de Pokémon y ver información detallada sobre cada uno de ellos al seleccionarlo. La aplicación muestra datos como el peso, la altura, las habilidades, y los movimientos de cada Pokémon, junto con imágenes de sus diferentes versiones.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Paso 1: Iniciar el Servidor Metro
 
-## Step 1: Start the Metro Server
+Primero, necesitas iniciar Metro, el bundler de JavaScript que se incluye con React Native.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+Para iniciar Metro, ejecuta el siguiente comando desde la raíz de tu proyecto de React Native:
 
-To start Metro, run the following command from the _root_ of your React Native project:
 
 ```bash
-# using npm
+# usando npm
 npm start
 
-# OR using Yarn
+# O usando yarn
 yarn start
 ```
 
-## Step 2: Start your Application
+## Paso 2: Iniciar tu Aplicación
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+Deja Metro Bundler corriendo en su propia terminal. Abre una nueva terminal en la raíz de tu proyecto de React Native. Ejecuta el siguiente comando para iniciar tu app en Android o iOS:
 
-### For Android
+### Para android
 
 ```bash
-# using npm
+# usando npm
 npm run android
 
-# OR using Yarn
+# O usando yarn
 yarn android
 ```
 
-### For iOS
+### Para iOS
 
 ```bash
-# using npm
+# usando npm
 npm run ios
 
-# OR using Yarn
+# O usando yarn
 yarn ios
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+Si todo está configurado correctamente, deberías ver tu nueva aplicación ejecutándose en tu Emulador de Android o Simulador de iOS poco después, siempre y cuando hayas configurado correctamente el emulador o simulador.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+Esta es una forma de ejecutar la app; también puedes iniciarla directamente desde Android Studio o Xcode, respectivamente.
 
